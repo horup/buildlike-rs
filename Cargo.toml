@@ -7,3 +7,7 @@ edition = "2021"
 
 [dependencies]
 generational-arena = "0.2.8"
+geo = "0.18.0"
+
+[dev-dependencies]
+eframe = "0.15.0"

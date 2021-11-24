@@ -1,6 +1,7 @@
 mod collection;
 pub use collection::*;
 use collection::Collection;
+use geo::Coordinate;
 
 use std::ops::{Deref, DerefMut};
 use generational_arena::{Arena, Index};
@@ -23,10 +24,19 @@ impl PartialEq for Line {
 }
 
 
-#[derive(Clone, Copy, PartialEq, Default)]
+#[derive(Clone, Copy, PartialEq, Default, Debug)]
 pub struct Vertex {
     pub x: f32,
     pub y: f32,
+}
+
+impl From<Vertex> for Coordinate<f32> {
+    fn from(v: Vertex) -> Self {
+        Self {
+            x:v.x,
+            y:v.y
+        }
+    }
 }
 
 impl Vertex {
@@ -37,6 +47,7 @@ impl Vertex {
 
 pub struct Sprite {}
 
+#[derive(Default)]
 pub struct World {
     pub vertices: Collection<Vertex>,
     pub lines: Collection<Line>,
@@ -53,6 +64,7 @@ impl World {
     }
 }
 
+#[derive(Default)]
 pub struct Designer {
     pub vertices: Vec<Vertex>,
 }
@@ -71,7 +83,27 @@ impl Designer {
     }
 
     pub fn commit(&mut self, world: &mut World) {
+        // locate all vertices
         let mut vertices = Vec::new();
+        let mut geo_lines:Vec<geo::Line<f32>> = Vec::new();
+
+        for i in 0..self.vertices.len() {
+            if let [Some(v1), Some(v2)] = [self.vertices.get(i), self.vertices.get((i + 1) % self.vertices.len())] {
+                geo_lines.push(geo::Line {
+                    start: Coordinate::from(*v1),
+                    end: Coordinate::from(*v2),
+                });
+            }
+        }
+
+        for geo_line in geo_lines.iter() {
+            // check if intersects with lines in the world
+            for (lineindex, line) in world.lines.iter() {
+
+            }
+        }
+
+        
         for p in self.vertices.drain(..) {
             let v = world.vertices.find_or_insert(p);
             vertices.push(v);
@@ -91,11 +123,8 @@ impl Designer {
                 }
             }
         }
+       
 
-        if lines.len() >= 2 {
-            let sector = Sector {
-
-            };
-        }
+        self.vertices.clear();
     }
 }

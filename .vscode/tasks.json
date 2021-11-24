@@ -3,7 +3,8 @@
 	"tasks": [
 		{
 			"type": "cargo",
-			"command": "test",
+			"command": "run",
+			"args": ["--example", "egui"],
 			"problemMatcher": [
 				"$rustc"
 			],
