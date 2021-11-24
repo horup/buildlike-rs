@@ -23,6 +23,25 @@ impl PartialEq for Line {
     }
 }
 
+impl Line {
+    pub fn vertices(&self, vertices:&Collection<Vertex>) -> Option<(Vertex, Vertex)> {
+        if let [Some(v1), Some(v2)] = [vertices.get(self.v1), vertices.get(self.v2)] {
+            return Some((*v1, *v2));
+        }
+
+        return None;
+    }
+    pub fn as_geo_line(&self, vertices:&Collection<Vertex>) -> Option<geo::Line<f32>> {
+        if let Some((v1, v2)) = self.vertices(vertices) {
+            return Some(geo::Line {
+                start:Coordinate::from(v1),
+                end:Coordinate::from(v2)
+            })
+        }
+        None
+    }
+}
+
 
 #[derive(Clone, Copy, PartialEq, Default, Debug)]
 pub struct Vertex {
