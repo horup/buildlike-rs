@@ -57,7 +57,7 @@ impl epi::App for App {
             // world
             // paint lines
             for (_, line) in world.lines.iter() {
-                if let (Some(v1), Some(v2)) = (world.vertices.get(line.v1), world.vertices.get(line.v2)) {
+                if let (Some(v1), Some(v2)) = (world.vertices.get(line.start), world.vertices.get(line.end)) {
                     p.line_segment([Pos2::new(v1.x, v1.y), Pos2::new(v2.x, v2.y)], Stroke::new(1.0, Color32::WHITE));
                 }
             }
